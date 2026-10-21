@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Maak 'm af prototype</title>
+<title>Maak 'm af – concept</title>
+<meta name="description" content="Klikbaar concept voor een UX-sollicitatiecase. Geen echte webshop.">
+<meta name="robots" content="noindex">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
@@ -172,6 +174,16 @@ button.img{padding:0;border:0;display:block;width:100%}
 .panel b{font-weight:800}
 @media (max-width:440px){.phone{height:760px;border-radius:36px;padding:8px}.screen{border-radius:28px}}
 @media (prefers-reduced-motion:reduce){.card{transition:none}}
+
+/* Kale versie: alleen het mobiele scherm */
+body{padding:0!important;background:var(--surface)}
+.wrap{display:block!important;max-width:none!important;margin:0!important}
+.notes{display:none!important}
+.phone{width:100%!important;max-width:480px!important;height:100vh!important;height:100dvh!important;margin:0 auto!important;padding:0!important;border-radius:0!important;background:none!important;box-shadow:none!important}
+.screen{border-radius:0!important}
+@media (min-width:481px){body{background:var(--page)}.phone{box-shadow:0 0 0 1px var(--line)!important}}
+.disclaimer{font-size:11px;color:var(--muted);text-align:center;padding:8px 0 0}
+.logo.ph{border:0!important;font-weight:800;color:#BDBDBD!important;letter-spacing:.02em;font-size:16px!important;justify-content:flex-start!important;padding:0!important}
 </style>
 
 <div class="wrap">
@@ -297,7 +309,7 @@ function chrome(inner, back){
   const user=`<svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="8" r="4" stroke="#1A1A1A" stroke-width="1.6"/><path d="M3.5 20c1.2-3.6 4.2-5.5 7.5-5.5s6.3 1.9 7.5 5.5" stroke="#1A1A1A" stroke-width="1.6"/></svg>`;
   return `<div class="usp">${truck}<span>vandaag besteld, morgen in huis</span></div><div class="top">
    ${back?`<button class="ico" data-go="${back}" aria-label="Terug">${IC.back}</button>`:`<button class="ico" aria-label="Menu">${menu}</button>`}
-   ${LOGO?`<button class="logo" data-reset aria-label="Terug naar het begin"><img src="${LOGO}" alt="logo"></button>`:`<button class="logo ph" data-reset aria-label="Terug naar het begin">[logo]</button>`}<span class="sp"></span>
+   ${LOGO?`<button class="logo" data-reset aria-label="Terug naar het begin"><img src="${LOGO}" alt="logo"></button>`:`<button class="logo ph" data-reset aria-label="Terug naar het begin">logo</button>`}<span class="sp"></span>
    <button class="ico" aria-label="Account">${user}<span class="x" aria-hidden="true">×</span></button>
    <button class="ico" data-go="kamer" aria-label="Wensenlijst, ${S.list.length} producten">${IC.heart}${S.list.length?`<span class="badge">${S.list.length}</span>`:""}</button>
    <button class="ico" data-go="mandje" aria-label="Winkelmand">${IC.bag}</button></div>` + inner;
@@ -335,6 +347,7 @@ const V = {
      <div class="scroll-x"><span class="ochip">NOUS Living hoekbanken</span><span class="ochip">groene banken</span><span class="ochip">hoekbanken rechts</span></div></section>
    <section style="display:flex;flex-direction:column;gap:10px"><h2>en wat vind je van deze?</h2>
      <div class="hs">${[...ALT, P.find(p=>p.id==="f1")].map(p=>pcard(p)).join("")}</div></section>
+   <p class="disclaimer">Concept voor een UX-case · geen echte webshop</p>
  </div>`); },
 
  lijst(){ const items=P.filter(p=>p.role===S.tab); const ok=items.filter(matches), rest=items.filter(p=>!matches(p));
@@ -491,6 +504,29 @@ document.addEventListener("click",e=>{
 });
 document.getElementById("tglTotal").addEventListener("change",e=>{S.showTotal=e.target.checked; render();});
 render();
+
+const PRESETS={
+ "start":()=>{S.mood=null;},
+ "productpagina":()=>{S.mood="warm";},
+ "sheet-sfeer":()=>{S.mood="warm";S.sheet={type:"mood"};},
+ "sheet-fauteuil":()=>{S.mood="warm";S.sheet={type:"shop",role:"Fauteuil"};},
+ "sheet-kussens":()=>{S.mood="warm";S.sheet={type:"shop",role:"Kussens"};},
+ "sheet-poef":()=>{S.mood="warm";S.sheet={type:"shop",role:"Poef"};},
+ "sheet-lamp":()=>{S.mood="warm";S.sheet={type:"shop",role:"Lamp"};},
+ "sheet-bijzettafel":()=>{S.mood="warm";S.sheet={type:"shop",role:"Bijzettafel"};},
+ "swipe":()=>{S.mood="warm";S.list=["f1"];S.sw={i:0,picked:[],role:"Fauteuil"};S.sheet={type:"swipe"};},
+ "swipe-einde":()=>{S.mood="warm";S.list=["f1","f2"];S.sw={i:99,picked:["f2"],role:"Fauteuil"};S.sheet={type:"swipe"};},
+ "wensenlijst-kamer":()=>{S.mood="warm";S.list=["f1","k1","po1","l1","b1"];S.prev={s:"pdp",y:0,sheet:null};S.screen="kamer";S.view="kamer";},
+ "wensenlijst-lijst":()=>{S.mood="warm";S.list=["f1","k1","po1","l1","b1"];S.prev={s:"pdp",y:0,sheet:null};S.screen="kamer";S.view="lijst";},
+ "materiaal":()=>{S.mood="warm";S.list=["f1","k1","po1","l1","b1"];S.screen="kamer";S.view="kamer";S.sheet={type:"mat",id:"k1"};},
+ "delen":()=>{S.mood="warm";S.list=["f1","k1","po1","l1","b1"];S.screen="kamer";S.sheet={type:"share"};},
+ "gedeeld-lijstje":()=>{S.mood="warm";S.list=["f1","k1","po1","l1","b1"];S.screen="ontvanger";},
+ "winkelmand":()=>{S.mood="warm";S.list=["f1","k1","po1","l1","b1"];S.screen="mandje";},
+ "zoeken":()=>{S.mood="warm";S.screen="lijst";S.tab="Kussens";}
+};
+function applyHash(){ const k=decodeURIComponent(location.hash.slice(1)); const f=PRESETS[k]; if(!f) return;
+  S.screen="pdp";S.sheet=null;S.toast=null;S.prev=null;S.list=[];S.combo=[...MOODS.warm.c];S.sw={i:0,picked:[]}; f(); render(); }
+window.addEventListener("hashchange",applyHash); applyHash();
 </script>
 
 </html>
